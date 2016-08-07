@@ -1,0 +1,36 @@
+fin = open('words.txt', 'r')              #1-корпус слов
+frm1 = fin.readlines()                    #2-нормализованные отзывы
+fin = open('otzyv.txt', 'r')
+frm2 = fin.readlines()
+#from2 = ['это строка первый хороший отзыв','это второй отзыв во второй строка плохой','а это третий строка хороший','это первый плохой отзыв']
+#from1 = ['во','второй','отзыв','первый','плохой','строка','третий','хороший','это']
+sum1 = len(from1)
+sum2 = len(from2)
+
+from1 = str(frm1).split(',')
+from2 = str(frm2).split(',')
+
+tf = [[0] * sum2 for p in range(sum1)]
+for i1 in range(sum1):
+    for j1 in range(sum2):
+        tf[i1][j1] = from2[j1].count(from1[i1])/len(from2[j1].split())
+
+from math import log
+count = 0
+idf = [0]*sum1
+for i2 in range(sum1):
+    for j2 in range(sum2):
+        if from2[j2].find(from1[i2]) != -1:
+            count += 1
+    idf[i2] = log(sum2/count,10)
+    count = 0
+
+ves = [[0] * sum2 for q in range(sum1)]
+for i in range(sum1):
+    for j in range(sum2):
+        ves[i][j] = tf[i][j] * idf[i]
+for row in ves:
+    print(' '.join([str(elem) for elem in row]))
+a = open('weight.txt', 'w')
+a.write(str(ves))
+a.close()
