@@ -1,0 +1,29 @@
+a=open('02.1.py','r')
+A=[i.strip() for i in a.readlines()]
+a.close()
+b=open('03.1.py','r')
+B=[i.strip() for i in b.readlines()]
+b.close()
+c=open('03.2.py','r')
+C=[i.strip().split() for i in c.readlines()]
+c.close()
+
+for e in range(len(B)):
+    B[e]=set(B[e].split(' '))
+
+D=[]
+for e in A[0].split(' '):
+    count=0
+    mark=0
+    for i in range(len(B)):
+        if e in B[i]:
+            count+=1
+            mark+=int(C[0][i])
+        if count!=0:
+            D.append(mark/count)
+        else:
+            D.append('NO')
+print(D)
+d=open('04.py','w')
+print(D,file=d)
+d.close()
