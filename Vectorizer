@@ -1,0 +1,44 @@
+fin = open('cmt_words.txt', 'r')
+inwords = open('words.txt', 'r')
+intf = open('tf_idf.txt', 'r')
+inem = open('emotions.txt', 'r')          #Подключаем входные/выходные файлы
+incomm = open('comments.txt', 'r')
+outvec = open('vec_cmt.txt', 'w')
+outtf = open('x_train.txt', 'w')
+
+cmt, words = fin.readline().split()
+cmt, words = int(cmt), int(words)
+
+tf_idf = [[int(j) for j in intf.readline().split()] for i in range(cmt)]
+emotions = [inem.readline() for i in range(words)]
+vec_cmt = [[0] * cmt for i in range(cmt)]           #Считываем массивы
+comm = [incomm.readline() for i in range(cmt)]
+wrd = [inwords.readline() for i in range(words)]
+
+for i in range(cmt):
+        tf_idf[i][:] *= emotions[i]  #Построчно умножаем массив tf_idf на эмоциональную оценку слов 
+
+for f in range(cmt):
+    for k in comm[f].split():   #Идем циклом по словам в каждом отзыве
+        for i in range(words):
+            if (k == wrd[i]):    #Находим индекс слова в tf_idf по списку слов wrd 
+                break
+            
+        vec_cmt[f][:] += tf_idf[i][:]  #Прибавляем к строке vec_cmt строку tf_idf
+
+    
+for i in range(cmt):
+    for j in range(words):
+        outvec.write(str(vec_cmt[i][j]), ' ')
+        
+    outvec.write('\n')
+
+                                        #Выводим массивы в файлы в виде матрицы
+for i in range(cmt):
+    for j in range(words):
+        outtf.write(tf_idf[i][j], ' ')
+
+    outtf.write('\n')
+
+outvec.close()          #Закрываем выходные потоки
+outtf.close()
