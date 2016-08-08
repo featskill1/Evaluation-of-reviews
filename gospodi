@@ -1,0 +1,11 @@
+import requests
+
+r = requests.get('https://api.content.market.yandex.ru/v1/model/8226067/opinion.json?sort=rank&page=1&count=30', headers={'Authorization':'XMe0jU04gpb5Bx2wwPW7IplotKhK5F', 'Accept':'*/*'})
+j = r.json()
+for i in range(2,(j['modelOpinions']['total']-1)//30+2):
+    r = requests.get('https://api.content.market.yandex.ru/v1/model/8226067/opinion.json?sort=rank&page=%s&count=30' % (i), headers={'Authorization':'XMe0jU04gpb5Bx2wwPW7IplotKhK5F', 'Accept':'*/*'})
+    k = r.json()
+    j['modelOpinions']['opinion'] += k['modelOpinions']['opinion']
+fin = open('parsing.json', 'w')
+print(j, file=fin)
+fin.close()
